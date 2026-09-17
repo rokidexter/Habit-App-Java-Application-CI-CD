@@ -6,6 +6,12 @@ pipeline {
         maven 'Maven-3.9.12'
     }
 
+    environment {
+        ECR_REGISTRY = '382170164329.dkr.ecr.ap-south-1.amazonaws.com'
+        IMAGE_NAME   = 'habitapp'
+        IMAGE_TAG    = "${env.GIT_COMMIT.take(7)}"
+    }
+
     stages {
 
         stage('Checkout') {
@@ -37,6 +43,17 @@ pipeline {
                 timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh '''
+                    docker build \
+                      -t ${IMAGE_NAME}:${IMAGE_TAG} \
+                      -t ${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} \
+                      .
+                '''
             }
         }
     }
