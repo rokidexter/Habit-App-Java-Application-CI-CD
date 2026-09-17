@@ -67,5 +67,16 @@ pipeline {
                 '''
             }
         }
+
+        stage('Update Helm Configuration') {
+            steps {
+                sh '''
+                    sed -i "s/^  tag: .*/  tag: \\"${IMAGE_TAG}\\"/" helm/habitapp/values.yaml
+
+                    echo "Updated Helm image tag:"
+                    grep -n -A3 "^image:" helm/habitapp/values.yaml
+                '''
+            }
+        }
     }
 }
