@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: 382170164329.dkr.ecr.ap-south-1.amazonaws.com/habitapp
-  tag: "388d376"
+  tag: "ab5a554"
   pullPolicy: IfNotPresent
 
 imagePullSecrets:
