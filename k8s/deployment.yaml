@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: habitapp
+  namespace: habitapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: habitapp
+  template:
+    metadata:
+      labels:
+        app: habitapp
+    spec:
+      imagePullSecrets:
+        - name: ecr-secret
+      containers:
+        - name: habitapp
+          image: 382170164329.dkr.ecr.ap-south-1.amazonaws.com/habitapp:388d376
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            httpGet:
+              path: /api/habits
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/habits
+              port: 8080
+            initialDelaySeconds: 40
+            periodSeconds: 20
