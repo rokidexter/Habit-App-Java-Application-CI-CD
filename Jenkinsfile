@@ -78,5 +78,32 @@ pipeline {
                 '''
             }
         }
+
+        stage('Commit Deployment Change') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'github-push',
+                        usernameVariable: 'GIT_USERNAME',
+                        passwordVariable: 'GIT_PASSWORD'
+                    )
+                ]) {
+                    sh '''
+                        git config user.name "Jenkins"
+                        git config user.email "jenkins@localhost"
+
+                        git add helm/habitapp/values.yaml
+
+                        if git diff --cached --quiet; then
+                            echo "No Helm deployment changes to commit."
+                        else
+                            git commit -m "Update HabitApp image to ${IMAGE_TAG}"
+
+                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/rokidexter/Habit-App-Java-Application-CI-CD.git HEAD:main
+                        fi
+                    '''
+                }
+            }
+        }
     }
 }
