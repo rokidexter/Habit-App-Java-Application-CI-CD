@@ -1,3 +1,4 @@
+```groovy
 pipeline {
     agent any
 
@@ -24,7 +25,7 @@ pipeline {
                 withSonarQubeEnv('SonarQube') {
                     sh '''
                         mvn sonar:sonar \
-                          -Dsonar.projectKey=habitapp \
+                          -Dsonar.projectKey=HabitApp \
                           -Dsonar.projectName=HabitApp
                     '''
                 }
@@ -32,3 +33,4 @@ pipeline {
         }
     }
 }
+```
