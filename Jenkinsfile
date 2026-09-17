@@ -56,6 +56,16 @@ pipeline {
                 '''
             }
         }
+
+        stage('Push Image') {
+            steps {
+                sh '''
+                    aws ecr get-login-password --region ap-south-1 | \
+                    docker login --username AWS --password-stdin ${ECR_REGISTRY}
+
+                    docker push ${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+                '''
+            }
+        }
     }
 }
-
